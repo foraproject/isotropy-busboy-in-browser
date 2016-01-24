@@ -1,0 +1,30 @@
+{
+  "author": "Jeswin Kumar <jeswinpk@agilehead.com>",
+  "name": "isotropy-busboy-in-browser",
+  "version": "0.1.1",
+  "description": "Isotropy port of busboy that works in the browser.",
+  "main": "dist/isotropy-busboy-in-browser.js",
+  "scripts": {
+    "test": "mocha dist/test/test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jeswin/isotropy-busboy-in-browser.git"
+  },
+  "dependencies": {
+  },
+  "devDependencies": {
+    "isotropy-http-in-browser": "*",
+    "babel-polyfill": "*",
+    "babel-preset-es2015": "*",
+    "babel-preset-react": "*",
+    "babel-preset-stage-2": "*",
+    "babel-plugin-transform-class-properties": "*",
+    "babel-relay-plugin-loader": "*",
+    "mocha": "*",
+    "should": "*"
+  },
+  "engines": { "node": ">= 0.11.9" },
+  "keywords": ["isotropy", "busboy", "isomorphic"],
+  "license" : "MIT"
+}
