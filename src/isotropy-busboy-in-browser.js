@@ -1,19 +1,5 @@
 /* @flow */
-import type { KoaContextType } from "./flow/koa-types";
-import type { IncomingMessage } from "./flow/http-types";
-
-type FilePartType = {
-  fieldname: string;
-  file: string;
-  filename: string;
-}
-
-type FieldPartType = {
-  fieldname: string;
-  value: string;
-}
-
-type PartType = FilePartType | FieldPartType;
+import type { IncomingMessage, PartType } from "./flow/http-types";
 
 type OptionsType = {
   limits?: {
@@ -23,8 +9,7 @@ type OptionsType = {
   }
 }
 
-export default function (context: KoaContextType, opts: OptionsType = {}) : () => Promise<?PartType> {
-  const request: IncomingMessage = context.req || context;
+export default function (request: IncomingMessage, opts: OptionsType = {}) : () => Promise<?PartType> {
 
   let isAwaiting = false;
   let resolve, reject;
@@ -33,8 +18,8 @@ export default function (context: KoaContextType, opts: OptionsType = {}) : () =
 
   // koa special sauce
 
-  const fields = request.__parts.filter(p => typeof p.value !== "undefined");
-  const files = request.__parts.filter(p => typeof p.value === "undefined");
+  const fields = request.__parts.filter(p => p.type === "field");
+  const files = request.__parts.filter(p => p.type === "file");
 
   if (opts.limits) {
     if (opts.limits.files) {
