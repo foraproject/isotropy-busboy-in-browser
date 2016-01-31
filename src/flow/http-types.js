@@ -4,6 +4,8 @@ type FilePartType = {
   fieldname: string;
   file: any ;
   filename: string;
+  transferEncoding: string;
+  mimeType: string;
 }
 
 type FieldPartType = {
