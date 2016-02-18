@@ -1,5 +1,6 @@
 import __polyfill from "babel-polyfill";
 import should from "should";
+import XMLHttpRequest from "./xml-http-request";
 import httpModule from 'isotropy-http-in-browser';
 import busboy from '../isotropy-busboy-in-browser';
 
@@ -87,16 +88,16 @@ describe('isotropy-busboy', () => {
 
   function request() {
     const req = new httpModule.IncomingMessage();
-    req.__setParts([
-      { type: "field", fieldname: "file_name_0", value: "super alpha file" },
-      { type: "field", fieldname: "file_name_0", value: "super beta file" },
-      { type: "field", fieldname: "file_name_0", value: "super gamma file" },
-      { type: "field", fieldname: "file_name_1", value: "super gamma file" },
-      { type: "field", fieldname: "_csrf", value: "ooxx" },
-      { type: "field", fieldname: "hasOwnProperty", value: "super bad file" },
-      { type: "file", fieldname: "upload_file_0", filename: "1k_a.dat", file: "Some file content" },
-      { type: "file", fieldname: "upload_file_0", filename: "1k_b.dat", file: "Other file content" },
-      { type: "file", fieldname: "upload_file_0", filename: "hack.exe", file: "Exe content" }
+    req.__setBody([
+      { fieldname: "file_name_0", value: "super alpha file" },
+      { fieldname: "file_name_0", value: "super beta file" },
+      { fieldname: "file_name_0", value: "super gamma file" },
+      { fieldname: "file_name_1", value: "super gamma file" },
+      { fieldname: "_csrf", value: "ooxx" },
+      { fieldname: "hasOwnProperty", value: "super bad file" },
+      { fieldname: "upload_file_0", filename: "1k_a.dat", file: "Some file content" },
+      { fieldname: "upload_file_0", filename: "1k_b.dat", file: "Other file content" },
+      { fieldname: "upload_file_0", filename: "hack.exe", file: "Exe content" }
     ]);
     return req;
   }

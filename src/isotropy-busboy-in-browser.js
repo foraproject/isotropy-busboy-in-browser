@@ -1,5 +1,11 @@
 /* @flow */
-import type { IncomingMessage, PartType } from "./flow/http-types";
+import stream from "stream";
+import type { IncomingMessage, BodyType, FormDataType, FormDataEntryType } from "./flow/http-types";
+
+type StreamReadable = {
+  _read: Function,
+  push(chunk: ?(Buffer | string), encoding? : string): boolean
+}
 
 type OptionsType = {
   limits?: {
@@ -9,17 +15,17 @@ type OptionsType = {
   }
 }
 
-export default function (request: IncomingMessage, opts: OptionsType = {}) : () => Promise<?PartType> {
+export default function (request: IncomingMessage, opts: OptionsType = {}) : () => Promise<?FormDataEntryType> {
 
   let isAwaiting = false;
   let resolve, reject;
-  let parts: Array<PartType> = [].concat(request.__parts);
+  let body: FormDataType = (request.__getBody() : any);
   let errors: Array<Error> = [];
 
   // koa special sauce
 
-  const fields = request.__parts.filter(p => p.type === "field");
-  const files = request.__parts.filter(p => p.type === "file");
+  const fields = body.filter(p => typeof p.filename === "undefined");
+  const files = body.filter(p => typeof p.filename !== "undefined");
 
   if (opts.limits) {
     if (opts.limits.files) {
@@ -33,7 +39,7 @@ export default function (request: IncomingMessage, opts: OptionsType = {}) : () 
       }
     }
     if (opts.limits.parts) {
-      if (parts.length > opts.limits.parts) {
+      if (body.length > opts.limits.parts) {
         onError("Reach parts limit");
       }
     }
@@ -49,16 +55,34 @@ export default function (request: IncomingMessage, opts: OptionsType = {}) : () 
     if (isAwaiting) {
       if (errors.length) {
         reject(errors[0]);
-      } else if (parts.length) {
-        resolve(parts.shift());
-        isAwaiting = false;
+      } else if (body.length) {
+        if (typeof body !== "string") {
+          const part = body.shift();
+          if (part.filename) {
+            const s: StreamReadable = (new stream.Readable() : any);
+            s._read = function noop() {}; // redundant? see update below
+            s.push(part.value);
+            s.push(null);
+            resolve({
+              filename: part.filename,
+              fieldname: part.fieldname,
+              file: s,
+              value: part.value
+            });
+          } else {
+            resolve(part);
+          }
+          isAwaiting = false;
+        } else {
+          resolve();
+        }
       } else {
         resolve();
       }
     }
   }
 
-  return () : Promise<?PartType> => {
+  return () : Promise<?FormDataEntryType> => {
     return new Promise((_resolve, _reject) => {
       isAwaiting = true;
       resolve = _resolve;

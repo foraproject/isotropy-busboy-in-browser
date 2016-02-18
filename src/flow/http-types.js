@@ -1,22 +1,13 @@
 /* @flow */
-type FilePartType = {
-  type: "file";
-  fieldname: string;
-  file: any ;
-  filename: string;
-  transferEncoding: string;
-  mimeType: string;
-}
-
-type FieldPartType = {
-  type: "field";
+export type FormDataEntryType = {
   fieldname: string;
   value: string;
+  filename?: string;
 }
 
-export type HashType = { [key: string]: string };
+export type FormDataType = Array<FormDataEntryType>;
 
-export type PartType = FilePartType | FieldPartType;
+export type BodyType = string | FormDataType;
 
 export type IncomingMessage = {
   removeListener: (name: string) => void;
@@ -30,13 +21,7 @@ export type IncomingMessage = {
   setTimeout: (msecs: number, callback: Function) => void;
   statusCode: number;
   url: string;
-  __body: HashType;
-  __parts: Array<PartType>;
-}
-
-export type ServerResponse = {
-  removeListener: (name: string) => void;
-  removeAllListeners: (name: string) => void;
+  __getBody: () => BodyType;
   on: (name: string, fn: Function) => void;
   pipe: (dest: any) => void;
   writeHead: (code: number, headers: Object) => void;
