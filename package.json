@@ -1,7 +1,7 @@
 {
   "author": "Jeswin Kumar <jeswinpk@agilehead.com>",
   "name": "isotropy-busboy-in-browser",
-  "version": "0.2.1",
+  "version": "0.2.3",
   "description": "Isotropy port of busboy that works in the browser.",
   "main": "dist/isotropy-busboy-in-browser.js",
   "scripts": {
@@ -9,10 +9,11 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/jeswin/isotropy-busboy-in-browser.git"
+    "url": "https://github.com/nodejam/isotropy-busboy-in-browser.git"
   },
   "dependencies": {
-    "stream": "*"
+    "stream": "*",
+    "isotropy-interfaces": "*"
   },
   "devDependencies": {
     "isotropy-http-in-browser": "*",

@@ -1,6 +1,6 @@
 /* @flow */
 import stream from "stream";
-import type { IncomingMessage, BodyType, FormDataType, FormDataEntryType } from "./flow/http-types";
+import type { IncomingMessage, BodyType, FormDataType, FormDataEntryType } from "isotropy-interfaces/node/http-in-browser";
 
 type StreamReadable = {
   _read: Function,
